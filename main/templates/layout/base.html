@@ -1,0 +1,51 @@
+{% load bootstrap4 %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>
+		{% block title %}
+		    Главная 
+		{% endblock title %} - Доска обьявлений
+	</title>
+	{% bootstrap_css %}
+	<link rel="stylesheet" type="text/css" href="{% static 'main/style.css' %}">
+	{% bootstrap_javascript jquery='slim' %}
+</head>
+<body class="container-fluid">
+	<header class="mb-4">
+		<h1 class="display-1 text-center">Обьявления</h1>
+	</header>
+	<div class="row">
+		<ul class="col nav justify-content-end border">
+			<li class="nav-item">
+				<a href="#" class="nav-link">Регистрация</a>
+			</li>
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+				aria-haspopup="true" aria-expanded="false">Профиль</a>
+				<div class="dropdown-menu">
+					<a href="#" class="dropdown-item">Мои обьявления</a>
+					<a href="#" class="dropdown-item">Изменить личные данные</a>
+					<a href="#" class="dropdown-item">Изменить пароль</a>
+					<div class="dropdown-divider"></div>
+					<a href="#" class="dropdown-item">Выйти</a>
+					<div class="dropdown-divider"></div>
+					<a href="#" class="dropdown-item">Удалить</a>
+				</div>
+			</li>
+			<li class="nav-item">
+				<a href="#" class="nav-link">Вход</a>
+			</li>
+		</ul>
+	</div>
+	<div class="row">
+		<nav class="col-md-auto nav flex-column border">
+			<a href="#" class="nav-link root">Главная</a>
+			<span class=""></span>
+		</nav>
+	</div>
+</body>
+</html>

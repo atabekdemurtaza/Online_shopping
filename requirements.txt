@@ -7,3 +7,4 @@ django-js-asset==1.2.2
 django-multiselectfield==0.1.12
 django-payments==0.14.0
 djangorestframework==3.11.1
+django-bootstrap4
