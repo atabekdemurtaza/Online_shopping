@@ -1,0 +1,15 @@
+{% extends "layout/base.html" %}
+
+{% block title %}
+	Профиль пользователя    
+{% endblock title %}
+
+{% block content %}
+	<h2>Профиль пользователя {{user.username}}</h2>
+	{% if user.is_authenticated %}
+	   	<p>Здравствуйте! {{user.first_name}} {{user.last_name}}</p>
+	{% else %}
+		<p>Здравствуйте!</p>
+	{% endif %}   
+	<h3>Ваши обьявления</h3>
+{% endblock content %}
