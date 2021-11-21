@@ -13,6 +13,9 @@ from django.shortcuts import get_object_or_404
 from .models import User 
 from .forms import ChangeUserInfoForm
 from django.contrib.auth.views import PasswordChangeView
+from django.views.generic.edit import CreateView 
+from .forms import RegisterUserForm
+from django.views.generic.base import TemplateView
 
 def index(request):
 
@@ -67,4 +70,15 @@ class ChangeUserPasswordView(SuccessMessageMixin, LoginRequiredMixin, PasswordCh
 	success_url   = reverse_lazy('main:profile')
 	success_message  = 'Пароль изменен'
 
+#Создадим поле регистрации
+class UserRegisterView(CreateView):
 
+	template_name = 'main/register_user.html' #имя шаблона
+	model = User                              #База
+	form_class = RegisterUserForm             #Форма
+	success_url = reverse_lazy('main:register_done') #И новая страница после регистрации 
+
+#Создадим поле успешности после активации
+class UserRegisterDoneView(TemplateView):
+
+	template_name = 'main/register_done.html'
