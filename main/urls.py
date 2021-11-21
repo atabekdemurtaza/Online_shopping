@@ -5,6 +5,7 @@ from .views import UserLoginView
 from .views import profile
 from .views import UserLogOutView
 from .views import ChangeUserInfoView
+from .views import ChangeUserPasswordView
 
 app_name = 'main'
 urlpatterns = [
@@ -14,6 +15,7 @@ urlpatterns = [
 	path('accounts/logout/', UserLogOutView.as_view(), name='logout'),
 	path('accounts/profile/', profile, name='profile'),
 	path('accounts/profile/change/', ChangeUserInfoView.as_view(), name='profile_change'),
+	path('accounts/password/change/', ChangeUserPasswordView.as_view(), name='password_change'),
 	path('', index, name='index'),
 
 ]

@@ -12,6 +12,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 from .models import User 
 from .forms import ChangeUserInfoForm
+from django.contrib.auth.views import PasswordChangeView
 
 def index(request):
 
@@ -58,3 +59,12 @@ class ChangeUserInfoView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
 		if not queryset:
 			queryset = self.get_queryset()
 		return get_object_or_404(queryset, pk=self.user_id)
+
+#Поле когда пользователь хочет изменить свой пароль 
+class ChangeUserPasswordView(SuccessMessageMixin, LoginRequiredMixin, PasswordChangeView):
+
+	template_name = 'main/password_change.html'
+	success_url   = reverse_lazy('main:profile')
+	success_message  = 'Пароль изменен'
+
+
