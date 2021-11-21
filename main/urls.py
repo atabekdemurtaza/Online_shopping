@@ -6,6 +6,7 @@ from .views import profile
 from .views import UserLogOutView
 from .views import ChangeUserInfoView
 from .views import ChangeUserPasswordView
+from .views import UserRegisterView, UserRegisterDoneView
 
 app_name = 'main'
 urlpatterns = [
@@ -16,6 +17,8 @@ urlpatterns = [
 	path('accounts/profile/', profile, name='profile'),
 	path('accounts/profile/change/', ChangeUserInfoView.as_view(), name='profile_change'),
 	path('accounts/password/change/', ChangeUserPasswordView.as_view(), name='password_change'),
+	path('accounts/register/', UserRegisterView.as_view(), name='register'),
+	path('accounts/register/done/', UserRegisterDoneView.as_view(), name='register_done'),
 	path('', index, name='index'),
 
 ]
