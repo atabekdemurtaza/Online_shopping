@@ -106,6 +106,7 @@ def user_activate(request, sign):
 	return render(request, template)
 
 
+#Создадим класс для удалении пользователя
 class DeleteUserView(LoginRequiredMixin, DeleteView):
 
 	model = User 
