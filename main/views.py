@@ -18,6 +18,9 @@ from .forms import RegisterUserForm
 from django.views.generic.base import TemplateView
 from django.core.signing import BadSignature 
 from .utilities import signer 
+from django.views.generic.edit import DeleteView 
+from django.contrib.auth import logout 
+from django.contrib import messages
 
 def index(request):
 
@@ -102,3 +105,29 @@ def user_activate(request, sign):
 		user.save()
 	return render(request, template)
 
+
+class DeleteUserView(LoginRequiredMixin, DeleteView):
+
+	model = User 
+	success_url = reverse_lazy('main:index')
+	template_name = 'main/delete_user.html'
+
+	#Сохранили текущий ключ пользователя
+	def setup(self, request, *args, **kwargs):
+
+		self.user_id = request.user.pk 
+		return super().setup(request, *args, **kwargs)
+
+	#Создаем всплывающее сообщение об успешном удалении пользователя
+	def post(self, request, *args, **kwargs):
+
+		logout(request)
+		messages.add_message(request, messages.SUCCESS, 'Пользователь удален')
+		return super().post(request, *args, **kwargs)
+
+	#Отыскаем ключ пользователя, подлежащего удалению 
+	def get_object(self, queryset=None):
+
+		if not queryset:
+			queryset = self.get_queryset()
+		return get_object_or_404(queryset, pk=self.user_id)
