@@ -117,3 +117,7 @@ STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'main.User'
 
 DEFAULT_AUTO_FIELD='django.db.models.AutoField'
+
+EMAIL_PORT = 1025 #SMTP server 
+#Для запуска SMTP server 
+# py -m smtpd -n -c DebuggingServer localhost:1025

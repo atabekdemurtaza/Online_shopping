@@ -48,8 +48,8 @@ class RegisterUserForm(forms.ModelForm):
 
 		user = super().save(commit=False) #После регистрации пользователь должен активировать 
 		user.set_password(self.cleaned_data['password_1']) #Он введет пароль
-		user.is_active(False) #До тех новый пользователь будет неактивным пока не делает активацию
-		user.is_activated(False) #Тоже самое 
+		user.is_active = False  #До тех новый пользователь будет неактивным пока не делает активацию
+		user.is_activated = False  #Тоже самое 
 		if commit:           #Если он подтверден то активация успешно
 			user.save()      #И сохраняем нью пользователя
 		user_registered.send(RegisterUserForm, instance=user) #После него отправляем сигнал 

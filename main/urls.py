@@ -7,6 +7,7 @@ from .views import UserLogOutView
 from .views import ChangeUserInfoView
 from .views import ChangeUserPasswordView
 from .views import UserRegisterView, UserRegisterDoneView
+from .views import user_activate
 
 app_name = 'main'
 urlpatterns = [
@@ -19,6 +20,7 @@ urlpatterns = [
 	path('accounts/password/change/', ChangeUserPasswordView.as_view(), name='password_change'),
 	path('accounts/register/', UserRegisterView.as_view(), name='register'),
 	path('accounts/register/done/', UserRegisterDoneView.as_view(), name='register_done'),
+	path('accounts/register/activate/<str:sign>/', user_activate, name='register_activate'),
 	path('', index, name='index'),
 
 ]
