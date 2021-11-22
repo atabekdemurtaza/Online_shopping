@@ -16,6 +16,8 @@ from django.contrib.auth.views import PasswordChangeView
 from django.views.generic.edit import CreateView 
 from .forms import RegisterUserForm
 from django.views.generic.base import TemplateView
+from django.core.signing import BadSignature 
+from .utilities import signer 
 
 def index(request):
 
@@ -82,3 +84,21 @@ class UserRegisterView(CreateView):
 class UserRegisterDoneView(TemplateView):
 
 	template_name = 'main/register_done.html'
+
+#Создадим контроллер для активации пользователя 
+def user_activate(request, sign):
+
+	try:
+		username = signer.unsign(user) 
+	except BadSignature:
+		return render(request, 'main/bad_signature.html')
+	user = get_object_or_404(User, username=username)
+	if user.is_activated:
+		template = 'main/user_is_activated.html'
+	else:
+		template = 'main/activation_done.html'
+		user.is_active = True 
+		user.is_activated = True 
+		user.save()
+	return render(request, template)
+

@@ -2,7 +2,7 @@ from django import forms
 from .models import User 
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
-#from .apps import user_registered
+from .apps import user_registered
 
 class ChangeUserInfoForm(forms.ModelForm):
 
@@ -52,7 +52,7 @@ class RegisterUserForm(forms.ModelForm):
 		user.is_activated(False) #Тоже самое 
 		if commit:           #Если он подтверден то активация успешно
 			user.save()      #И сохраняем нью пользователя
-		#user_registered.send(RegisterUserForm, instance=user) #После него отправляем сигнал 
+		user_registered.send(RegisterUserForm, instance=user) #После него отправляем сигнал 
 		return user 
 
 	#Создадим форму
