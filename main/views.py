@@ -22,6 +22,8 @@ from django.views.generic.edit import DeleteView
 from django.contrib.auth import logout 
 from django.contrib import messages
 
+
+
 def index(request):
 
 	return render(request, 'main/index.html')
