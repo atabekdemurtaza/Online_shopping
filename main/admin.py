@@ -2,6 +2,8 @@ from django.contrib import admin
 from .models import User 
 import datetime 
 from .utilities import send_activation_notification
+from .models import SuperRubric, SubRubric 
+from .forms import SubRubricForm
 
 #Отправляем письма для активации 
 def send_activation_notifications(modeladmin, request, queryset):
@@ -54,5 +56,19 @@ class UserAdmin(admin.ModelAdmin):
 	readonly_fields = ('last_login', 'date_joined')
 	actions = (send_activation_notifications, )
 
-admin.site.register(User, UserAdmin)
+class SubRubricInline(admin.TabularInline):
 
+	model = SubRubric
+
+class SuperRubricAdmin(admin.ModelAdmin):
+
+	exclude = ('super_rubric',)
+	inlines = (SubRubricInline,)
+
+class SubRubricAdmin(admin.ModelAdmin):
+
+	form = SubRubricForm
+
+admin.site.register(User, UserAdmin)
+admin.site.register(SuperRubric, SuperRubricAdmin)
+admin.site.register(SubRubric, SubRubricAdmin)
