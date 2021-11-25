@@ -13,7 +13,7 @@ class User(AbstractUser):
 #Создадим Рубрику
 class Rubric(models.Model):
 
-	name  = models.CharField(max_length=20, db_index=True, unique=True, verbose_name='Название') #Название
+	name  = models.CharField(max_length=40, db_index=True, unique=True, verbose_name='Название') #Название
 	order = models.SmallIntegerField(default=0, db_index=True, verbose_name='Порядок')           #Порядок
 	super_rubric = models.ForeignKey('SuperRubric', on_delete=models.PROTECT, null=True, blank=True, verbose_name='Надрубрика') #Надрубрика
 

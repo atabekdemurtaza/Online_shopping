@@ -134,3 +134,8 @@ class DeleteUserView(LoginRequiredMixin, DeleteView):
 		if not queryset:
 			queryset = self.get_queryset()
 		return get_object_or_404(queryset, pk=self.user_id)
+
+#Обьявим рубрик из БД
+def by_rubric(request, pk):
+
+	pass 
