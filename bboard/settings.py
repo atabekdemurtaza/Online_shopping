@@ -31,8 +31,17 @@ INSTALLED_APPS = [
 
     #Установленные пакеты
     'bootstrap4',
+    'django_cleanup',
+    'easy_thumbnails',
 
 ]
+
+#easy-thumbnails -> Создает миниатуры
+#django-cleanup  -> Удаляет выгруженные файлы после удаления
+#Pillow          -> Обеспечивает поддержку графики, будет автоматически установлена при у3становке 
+
+#Создадим папку media внутри проекта
+#И внем создадим папку thumbnails
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -122,3 +131,17 @@ DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 EMAIL_PORT = 1025 #SMTP server 
 #Для запуска SMTP server 
 # py -m smtpd -n -c DebuggingServer localhost:1025
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+THUMBNAIL_ALIASES = {
+    '' : {
+            'default' : {
+                           'size' : (96,96), #96x96
+                           'crop' : 'scale',
+            },
+    },
+}
+
+THUMBNAIL_BASEDIR = 'thumbnails' #Папка где будут хранятся миниатуры - thumbnails
