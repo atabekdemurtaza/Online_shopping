@@ -1,5 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser 
+from .utilities import get_timestamp_path
+from ckeditor.fields import RichTextField
+from multiselectfield import MultiSelectField
+
 
 class User(AbstractUser):
 
@@ -67,3 +71,28 @@ class SubRubric(Rubric):
 """
 
 
+class Post(models.Model):
+
+	rubric = models.ForeignKey(SubRubric, on_delete=models.PROTECT, verbose_name='Рубрика')
+	title  = RichTextField(verbose_name='Товар')
+	content = models.FloatField(default=0, verbose_name='Цена')
+	contacts = models.TextField(verbose_name='Контакты')
+	image = models.ImageField(blank=True, upload_to=get_timestamp_path, verbose_name='Изображение')
+	author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
+	is_active = models.BooleanField(default=True, db_index=True, verbose_name='Выводить в списке ?')
+	created_at = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Опубликовано')
+
+	#В переопределенном отделе(методе) delete() перед удалением текущей
+	#записи мы перебираем и вызовем метода delete() и удаляем все 
+	#связанные дополнительные иллюстрации
+	def delete(self, *args, **kwargs):
+
+		for ai in self.additionalimage_set.all():
+			ai.delete()
+		super().delete(*args, **kwargs)
+
+	class Meta:
+
+		verbose_name_plural = 'Обьявления'
+		verbose_name = 'Обьявление'
+		ordering = ['-created_at']

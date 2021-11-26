@@ -2,6 +2,8 @@ from django.template.loader import render_to_string
 from django.core.signing import Signer 
 
 from bboard.settings import ALLOWED_HOSTS 
+from datetime import datetime 
+from os.path import splitext
 
 signer = Signer() #Создадим крипто шрифт то есть шифруем
 
@@ -20,4 +22,8 @@ def send_activation_notification(user): #Отправка писем
 	body_text = render_to_string('email/activation_letter_body.txt', context)  #Отправка писем с подтверждениями
 	user.email_user(subject, body_text) 
 
+#Генерирующей имена сохраняемых в модели выгруженных файлов
+def get_timestamp_path(instance, filename):
+
+	return '%s%s' % (datetime.now().timestamp(), splitext(filename)[1])
 
