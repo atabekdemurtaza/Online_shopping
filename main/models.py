@@ -10,6 +10,20 @@ class User(AbstractUser):
 	is_activated  = models.BooleanField(default=True, db_index=True, verbose_name='Прошел активацию?') #Проверим зарегистрирован ли пользователь
 	send_messages = models.BooleanField(default=True, verbose_name='Слать оповещения о новых комментариях?') #Признак того что пользователь уведомлен или нет!
 
+	#Ранее мы сделали так, чтобы при удалении обьявления явно 
+	#удалялись все связанные с ним дополнительные иллюстрации
+	#Это нужно для того, чтобы приложение django_cleanup удалило
+	#хранящие их файлы.
+	#Теперь сделаем так, чтобы при удалении пользователя удалялись
+	#оставленные им обьявления. Для этого добавим в код модели 
+	#User следующий фрагмент
+
+	def delete(self, *args, **kwargs):
+
+		for post in self.posts_set.all():
+			post.delete()
+		super().delete(*args, **kwargs)
+
 	class Meta(AbstractUser.Meta):
 
 		pass  
@@ -96,3 +110,13 @@ class Post(models.Model):
 		verbose_name_plural = 'Обьявления'
 		verbose_name = 'Обьявление'
 		ordering = ['-created_at']
+
+class AdditionalImage(models.Model):
+
+	posts = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name='Обьявление') #Обьявоение, к которому относится иллюстрация
+	image = models.ImageField(upload_to=get_timestamp_path, verbose_name='Изображение') #Собственно иллюстрация
+
+	class Meta:
+
+		verbose_name_plural = 'Дополнительные иллюстрации'
+		verbose_name = 'Дополнительная иллюстрация'
