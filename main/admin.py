@@ -4,6 +4,7 @@ import datetime
 from .utilities import send_activation_notification
 from .models import SuperRubric, SubRubric 
 from .forms import SubRubricForm
+from .models import AdditionalImage, Post
 
 #Отправляем письма для активации 
 def send_activation_notifications(modeladmin, request, queryset):
@@ -69,6 +70,17 @@ class SubRubricAdmin(admin.ModelAdmin):
 
 	form = SubRubricForm
 
+class AdditionalImageInline(admin.TabularInline):
+
+	model = AdditionalImage
+
+class PostAdmin(admin.ModelAdmin):
+
+	list_display = ('rubric', 'title', 'content', 'author', 'created_at')
+	fields = (('rubric', 'author'), 'title', 'content', 'price', 'contacts', 'image', 'is_active')
+	inlines = (AdditionalImageInline,)
+
 admin.site.register(User, UserAdmin)
 admin.site.register(SuperRubric, SuperRubricAdmin)
 admin.site.register(SubRubric, SubRubricAdmin)
+admin.site.register(Post, PostAdmin)

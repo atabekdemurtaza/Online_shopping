@@ -21,6 +21,10 @@ from .utilities import signer
 from django.views.generic.edit import DeleteView 
 from django.contrib.auth import logout 
 from django.contrib import messages
+from django.core.paginator import Paginator 
+from django.db.models import Q 
+from .models import SubRubric, Post 
+from .forms import SearchForm
 
 
 
@@ -138,4 +142,28 @@ class DeleteUserView(LoginRequiredMixin, DeleteView):
 #Обьявим рубрик из БД
 def by_rubric(request, pk):
 
-	pass 
+	rubric = get_object_or_404(SubRubric, pk=pk)
+	posts  = Post.objects.filter(is_active=True, rubric=pk)
+	#Это поля для поиска. Поиск ведется либо с title или content
+	if 'keyword' in request.GET:
+		keyword = request.GET['keyword']
+		q = Q(title__icontains=keyword) | Q(content__icontains=keyword)
+		posts = posts.filter(q)
+	else:
+		keyword = ''
+	form = SearchForm(initial={'keyword': keyword})
+
+	paginator = Paginator(posts, 2)
+	if 'page' in request.GET:
+		page_num = request.GET['page']
+	else:
+		page_num = 1 
+	page = paginator.get_page(page_num)
+	context = {
+		'rubric':rubric,
+		'page': page,
+		'posts': page.object_list,
+		'form': form
+	}
+	return render(request, 'main/by_rubric.html', context)
+

@@ -88,8 +88,9 @@ class SubRubric(Rubric):
 class Post(models.Model):
 
 	rubric = models.ForeignKey(SubRubric, on_delete=models.PROTECT, verbose_name='Рубрика')
-	title  = RichTextField(verbose_name='Товар')
-	content = models.FloatField(default=0, verbose_name='Цена')
+	title  = models.CharField(max_length=40, verbose_name='Товар')
+	content = RichTextField(verbose_name='Описание')
+	price = models.FloatField(default=0, verbose_name='Цена')
 	contacts = models.TextField(verbose_name='Контакты')
 	image = models.ImageField(blank=True, upload_to=get_timestamp_path, verbose_name='Изображение')
 	author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')

@@ -71,3 +71,9 @@ class SubRubricForm(forms.ModelForm):
 
 		model = SubRubric
 		fields = '__all__'
+
+class SearchForm(forms.Form):
+
+	#Пока посетитель может ввести в поле keyword искомое слово
+	#а может и не ввести(чтобы отменить выполненный поиск и вновь)
+	keyword = forms.CharField(required=False, max_length=20, label='')
