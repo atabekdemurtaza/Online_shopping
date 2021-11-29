@@ -69,7 +69,11 @@ class UserLoginView(LoginView):
 @login_required #Декоратор login_required потребуется для проверки если пользователь вошел тогда сработает 
 def profile(request):
 
-	return render(request, 'main/profile.html')
+	posts = Post.objects.filter(author=request.user.pk)
+	context = {
+		'posts': posts
+	}
+	return render(request, 'main/profile.html', context)
 
 class UserLogOutView(LogoutView, LoginRequiredMixin): #Проверим если пользователь уже существует внутри сайта. То он может выйти с сайта.
 
