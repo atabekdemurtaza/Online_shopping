@@ -76,7 +76,7 @@ class AdditionalImageInline(admin.TabularInline):
 
 class PostAdmin(admin.ModelAdmin):
 
-	list_display = ('rubric', 'title', 'content', 'author', 'created_at')
+	list_display = ('rubric', 'title', 'author', 'created_at')
 	fields = (('rubric', 'author'), 'title', 'content', 'price', 'contacts', 'image', 'is_active')
 	inlines = (AdditionalImageInline,)
 

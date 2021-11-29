@@ -1,0 +1,35 @@
+{% extends "layout/base.html" %}
+{% load static %}
+
+{% block title %}
+    {{post.title}}-{{post.rubric.name}}
+{% endblock title %}
+
+{% block content %}
+    <div class="container-fluid mt-3">
+    	<div class="row">
+    		{% if post.image %}
+    			<div class="col-md-auto">
+    				<img src="{{post.image.url}}" class="main-image">
+    			</div>
+    		{% endif %}
+    		<div class="col">
+    			<h2>{{post.title}}</h2>
+    			<p>{{post.content | safe}}</p>
+    			<p class="font-weight-bold">{{post.price}}руб.</p>
+    			<p>{{post.contacts}}</p>
+    			<p class="text-right font-italic">Добавлено {{post.created_at}}</p>
+    		</div>
+    	</div>
+    </div>
+    {% if ais %}
+    	<div class="d-flex justify-content-between flex-wrap mt-5">
+    		{% for ai in ais %}
+    			<div>
+    				<img class="additional-image" src="{{ai.image.url}}">
+    			</div>
+    		{% endfor %}
+    	</div>
+    {% endif %}
+    <p><a href="{% url 'main:by_rubric' pk=post.rubric.pk %}{{all}}">Назад</a></p>
+{% endblock content %}

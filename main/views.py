@@ -30,7 +30,27 @@ from .forms import SearchForm
 
 def index(request):
 
-	return render(request, 'main/index.html')
+	posts = Post.objects.filter(is_active=True)[:10]
+	#Это поля для поиска. Поиск ведется либо с title или content
+	if 'keyword' in request.GET:
+		keyword = request.GET['keyword']
+		q = Q(title__icontains=keyword) | Q(content__icontains=keyword)
+		posts = posts.filter(q)
+	else:
+		keyword = ''
+	form = SearchForm(initial={'keyword': keyword})
+	paginator = Paginator(posts, 2)
+	if 'page' in request.GET:
+		page_num = request.GET['page']
+	else:
+		page_num = 1 
+	page = paginator.get_page(page_num)
+	context = {
+		'posts': posts,
+		'form' : form,
+		'page' : page,
+	}
+	return render(request, 'main/index.html', context)
 
 def other_page(request, page):
 
@@ -167,3 +187,12 @@ def by_rubric(request, pk):
 	}
 	return render(request, 'main/by_rubric.html', context)
 
+def detail(request, rubric_pk, pk):
+
+	post = get_object_or_404(Post, pk=pk)
+	ais = post.additionalimage_set.all()
+	context = {
+		'post':post,
+		'ais' :ais,
+	}
+	return render(request, 'main/detail.html', context)

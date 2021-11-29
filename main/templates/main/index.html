@@ -1,6 +1,42 @@
 {% extends "layout/base.html" %}
+{% load bootstrap4 %}
+{% load thumbnail %}
+{% load static %}
 
 {% block content %}
 	<h1>Доска обьявлений</h1>
+	<div class="container-fluid mb-2">
+    	<div class="row">
+    		<div class="column">
+    			&nbsp;
+    		</div>
+    		<form class="col-md-auto form-inline">
+    			{% bootstrap_form form show_label=False %}
+    			{% bootstrap_button content="Поиск" button_type='submit' %}
+    		</form>
+    	</div>
+    </div>
+	{% for post in posts %}
+		{% url 'main:detail' rubric_pk=rubric.pk pk=post.pk as url %}
+    	<a href="{{url}}{{all}}">
+    		{% if post.image %}
+    			<img class="mr-3" src="{% thumbnail post.image 'default' %}">
+    		{% else %}
+    			<img class="mr-3" src="{% static 'main/empty.jpg' %}">
+    		{% endif %}
+    	</a>
+		<div class="media-body">
+    		<h3><a href="{{url}} {{all}}">{{post.title}}</a></h3>
+    		<div>
+    			{{post.content | safe}}
+    		</div>
+    		<p class="text-right font-weight-bold">
+    			{{post.price}} руб.
+    		</p>
+    		<p class="text-right font-italic">
+    			{{post.created_at}}
+    		</p>
+    	</div>
+	{% endfor %}
 {% endblock content %}
 

@@ -10,10 +10,12 @@ from .views import UserRegisterView, UserRegisterDoneView
 from .views import user_activate
 from .views import DeleteUserView
 from .views import by_rubric
+from .views import detail
 
 app_name = 'main'
 urlpatterns = [
 	
+	path('<int:rubric_pk>/<int:pk>', detail, name='detail'),
 	path('<int:pk>/', by_rubric, name='by_rubric'),
 	path('<str:page>/', other_page, name='other_page'),
 	path('accounts/login/', UserLoginView.as_view(), name='login'),
