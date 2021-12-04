@@ -174,13 +174,13 @@ def by_rubric(request, pk):
 	#Это поля для поиска. Поиск ведется либо с title или content
 	if 'keyword' in request.GET:
 		keyword = request.GET['keyword']
-		q = Q(title__icontains=keyword) | Q(content__icontains=keyword)
+		q = Q(title__icontains=keyword) 
 		posts = posts.filter(q)
 	else:
 		keyword = ''
 	form = SearchForm(initial={'keyword': keyword})
 
-	paginator = Paginator(posts, 2)
+	paginator = Paginator(posts, 10)
 	if 'page' in request.GET:
 		page_num = request.GET['page']
 	else:
