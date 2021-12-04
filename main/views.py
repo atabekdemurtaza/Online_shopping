@@ -25,6 +25,8 @@ from django.core.paginator import Paginator
 from django.db.models import Q 
 from .models import SubRubric, Post 
 from .forms import SearchForm
+from django.shortcuts import redirect
+from .forms import PostForm, AIFormSet
 
 
 
@@ -58,7 +60,7 @@ def other_page(request, page):
 		template = get_template('main/' + page + '.html') #получаем page Если процесс успешно
 	except TemplateDoesNotExist: #Если страница не найдена то появится отшибка 
 		raise Http404            #Тут сразу мигом захватываем запрос
-	return HttpResponse(template.render(request=request)) #И отправляем запрос
+	return HttpResponse(template.render(request=request)) #И отправляем запросq
 
 
 class UserLoginView(LoginView):
@@ -69,6 +71,7 @@ class UserLoginView(LoginView):
 @login_required #Декоратор login_required потребуется для проверки если пользователь вошел тогда сработает 
 def profile(request):
 
+	#Пользователи будут посматривать своих обьявлений, добавлять, править и удалять обьявления.
 	posts = Post.objects.filter(author=request.user.pk)
 	context = {
 		'posts': posts
@@ -190,7 +193,7 @@ def by_rubric(request, pk):
 		'form': form
 	}
 	return render(request, 'main/by_rubric.html', context)
-
+#Пост для общего пользования
 def detail(request, rubric_pk, pk):
 
 	post = get_object_or_404(Post, pk=pk)
@@ -200,3 +203,45 @@ def detail(request, rubric_pk, pk):
 		'ais' :ais,
 	}
 	return render(request, 'main/detail.html', context)
+
+#Пост для зарегистрированных пользователей
+@login_required
+def profile_post_detail(request, rubric_pk, pk):
+
+	post = get_object_or_404(Post, pk=pk)
+	ais = post.additionalimage_set.all()
+	posts = Post.objects.filter(author=request.user.pk)
+	context = {
+		'post': post,
+		'ais': ais,
+		'posts':posts,
+	}
+	return render(request, 'main/profile_post_detail.html', context)
+
+#Добавим обьявление, реализуем в виде функции(в виде класса его реализовать будет сложнее) так как назовем его profile_post_add()
+@login_required
+def profile_post_add(request):
+
+	if request.method == 'POST':
+		form = PostForm(request.POST, request.FILES)
+		if form.is_valid():
+			post = form.save()
+			formset = AIFormSet(request.POST, request.FIlES, instance=post)
+			if formset.is_valid():
+				formset.save()
+				messages.add_message(request, messages.SUCCESS, 'Обьявление добавлено')
+				return redirect('main:profile')
+	else:
+		form = PostForm(initial={'author':request.user.pk})
+		formset = AIFormSet()
+	context = {
+		'form': form, 
+		'formset': formset
+	}
+	return render(request, 'main/profile_post_add.html', context)
+
+#Здесь нужно отметить что у нас имеются 3 важных момента.1х при создании формы перед выводом страницы сохранения мы заносим в поле autor
+#ормы ключ текущего пользователя, который станет автором обьявления.
+#Во-вторых во время сохраниения введенного обьявления, при создании обьектов формы набора и набора форм, мы должны передать контсрукторам их
+#класса вторым позиционным параметром словарь со всеми полученными файлами(он хранится в атрибуте FILES обьекта запроса). Если мы не сделаем
+#этого, то отправленные пользователем илююстрации окажутся потерянными.

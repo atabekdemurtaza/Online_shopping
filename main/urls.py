@@ -11,6 +11,7 @@ from .views import user_activate
 from .views import DeleteUserView
 from .views import by_rubric
 from .views import detail
+from .views import profile_post_detail
 
 app_name = 'main'
 urlpatterns = [
@@ -20,6 +21,7 @@ urlpatterns = [
 	path('<str:page>/', other_page, name='other_page'),
 	path('accounts/login/', UserLoginView.as_view(), name='login'),
 	path('accounts/logout/', UserLogOutView.as_view(), name='logout'),
+	path('accounts/profile/<int:pk>/', profile_post_detail, name='profile_post_detail'),
 	path('accounts/profile/', profile, name='profile'),
 	path('accounts/profile/change/', ChangeUserInfoView.as_view(), name='profile_change'),
 	path('accounts/profile/delete/', DeleteUserView.as_view(), name='profile_delete'),

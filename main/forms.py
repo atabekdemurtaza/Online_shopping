@@ -1,9 +1,12 @@
-from django import forms 
+from django import forms
+from django.db.models import fields 
 from .models import User 
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
 from .apps import user_registered
 from .models import SuperRubric, SubRubric
+from django.forms import inlineformset_factory, widgets
+from .models import Post, AdditionalImage
 
 class ChangeUserInfoForm(forms.ModelForm):
 
@@ -77,3 +80,16 @@ class SearchForm(forms.Form):
 	#Пока посетитель может ввести в поле keyword искомое слово
 	#а может и не ввести(чтобы отменить выполненный поиск и вновь)
 	keyword = forms.CharField(required=False, max_length=20, label='')
+
+#Обьявим форму PostForm, связанную с моделью Post, для ввода самого обьявления и встроеннуй набор форм AIFormSet
+class PostForm(forms.ModelForm):
+
+	class Meta:
+
+		model = Post 
+		fields = '__all__'
+		widgets = {
+			'author': forms.HiddenInput
+		}
+
+AIFormSet = inlineformset_factory(Post, AdditionalImage, fields='__all__')
