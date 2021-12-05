@@ -226,7 +226,7 @@ def profile_post_add(request):
 		form = PostForm(request.POST, request.FILES)
 		if form.is_valid():
 			post = form.save()
-			formset = AIFormSet(request.POST, request.FIlES, instance=post)
+			formset = AIFormSet(request.POST, request.FILES, instance=post)
 			if formset.is_valid():
 				formset.save()
 				messages.add_message(request, messages.SUCCESS, 'Обьявление добавлено')

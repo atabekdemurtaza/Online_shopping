@@ -1,46 +1,37 @@
 {% extends "layout/base.html" %}
-{% load thumbnail %}
 {% load static %}
-{% load bootstrap4 %}
 
 {% block title %}
-	Профиль пользователя    
+    {{post.title}}-{{post.rubric.name}}
 {% endblock title %}
 
 {% block content %}
-	<h2>Профиль пользователя {{user.username}}</h2>
-	{% if user.is_authenticated %}
-	   	<p>Здравствуйте! {{user.first_name}} {{user.last_name}}</p>
-	{% else %}
-		<p>Здравствуйте!</p>
-	{% endif %}   
-	<h3>Ваши обьявления</h3>
-	{% for post in posts %}
-		{% url 'main:detail' rubric_pk=rubric.pk pk=post.pk as url %}
-		<a href="{{url}}{{all}}">
-			
-			{% if post.image %}
-				<img src="{% thumbnail post.image 'default' %}" class="mr-3">
-			{% else %}
-				<img src="{% thumbnail post.image 'empty.jpg' %}" class="mr-3" >
-			{% endif %}
-				
-		</a>
-		<div class="media-body">
-			<h3>
-				<a href="{{url}}{{all}}">{{post.title}}</a>
-			</h3>
-			<p>
-				{{post.content | safe}}
-			</p>
-			<p class="text-right font-weight-bold">
-				{{post.price}}$
-			</p>
-			<p class="text-right font-italic">
-				{{post.created_at}}
-			</p>
-		</div>
-	{% endfor %}
+    <div class="container-fluid mt-3">
+    	<div class="row">
+    		{% if post.image %}
+    			<div class="col-md-auto">
+    				<img src="{{post.image.url}}" class="main-image">
+    			</div>
+    		{% endif %}
+    		<div class="col">
+    			<h2>{{post.title}}</h2>
+    			<p>{{post.content | safe}}</p>
+    			<p class="font-weight-bold">{{post.price}}руб.</p>
+    			<p>{{post.contacts}}</p>
+    			<p class="text-right font-italic">Добавлено {{post.created_at}}</p>
+    		</div>
+    	</div>
+    </div>
+    {% if ais %}
+    	<div class="d-flex justify-content-between flex-wrap mt-5">
+    		{% for ai in ais %}
+    			<div>
+    				<img class="additional-image" src="{{ai.image.url}}">
+    			</div>
+    		{% endfor %}
+    	</div>
+    {% endif %}
+    <p><a href="{% url 'main:by_rubric' pk=post.rubric.pk %}{{all}}">Назад</a></p>
 {% endblock content %}
 
 
