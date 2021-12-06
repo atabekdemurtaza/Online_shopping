@@ -16,7 +16,7 @@ def send_activation_notifications(modeladmin, request, queryset):
 send_activation_notifications.short_description = 'Отправка писем с требованиями активации'
 
 
-class NonactivatedFilter(admin.SimpleListFilter):
+"""class NonactivatedFilter(admin.SimpleListFilter):
 
 	title = 'Прошли активацию?'
 	parameter_name = 'actstate'
@@ -39,14 +39,14 @@ class NonactivatedFilter(admin.SimpleListFilter):
 			return queryset.filter(is_active=False, is_activated=False, date_joined__date__lt=day)
 		elif val == 'week':
 			day = datetime.date.today() - datetime.timedelta(weeks=1)
-			return queryset.filter(is_active=False, is_activated=False, date_joined__date__lt=day)
+			return queryset.filter(is_active=False, is_activated=False, date_joined__date__lt=day)"""
 
 
 class UserAdmin(admin.ModelAdmin):
 
 	list_display = ('__str__', 'is_activated', 'date_joined')
 	search_fields = ('username','email','first_name', 'last_name')
-	list_filter = (NonactivatedFilter,)
+	#list_filter = (NonactivatedFilter,)
 	fields = (
 				('username','email'),('first_name','last_name'),
 				('send_messages', 'is_active', 'is_activated'),
