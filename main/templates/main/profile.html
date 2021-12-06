@@ -27,6 +27,7 @@
 				
 		</a>
 		<div class="media-body">
+			<p>Рубрика: {{post.rubric.name}}</p>
 			<h3>
 				<a href="{{url}}{{all}}">{{post.title}}</a>
 			</h3>
@@ -38,6 +39,10 @@
 			</p>
 			<p class="text-right font-italic">
 				{{post.created_at}}
+			</p>
+			<p class="text-right mt-2">
+				<a href="{% url 'main:profile_post_change' pk=post.pk %}">Исправить</a>
+				<a href="{% url 'main:profile_post_delete' pk=post.pk %}">Удалить</a>
 			</p>
 		</div>
 	{% endfor %}

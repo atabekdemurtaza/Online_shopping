@@ -13,16 +13,20 @@ from .views import by_rubric
 from .views import detail
 from .views import profile_post_detail
 from .views import profile_post_add 
+from .views import profile_post_change
+from .views import profile_post_delete
 
 app_name = 'main'
 urlpatterns = [
 	
-	path('<int:rubric_pk>/<int:pk>', detail, name='detail'),
+	path('<int:rubric_pk>/<int:pk>/', detail, name='detail'),
 	path('<int:pk>/', by_rubric, name='by_rubric'),
 	path('<str:page>/', other_page, name='other_page'),
 	path('accounts/login/', UserLoginView.as_view(), name='login'),
 	path('accounts/logout/', UserLogOutView.as_view(), name='logout'),
 	path('accounts/profile/<int:pk>/', profile_post_detail, name='profile_post_detail'),
+	path('accounts/profile/change/<int:pk>/', profile_post_change, name='profile_post_change'),
+	path('accounts/profile/delete/<int:pk>/', profile_post_delete, name='profile_post_delete'),
 	path('accounts/profile/add/', profile_post_add, name='profile_post_add'),
 	path('accounts/profile/', profile, name='profile'),
 	path('accounts/profile/change/', ChangeUserInfoView.as_view(), name='profile_change'),

@@ -245,3 +245,43 @@ def profile_post_add(request):
 #Во-вторых во время сохраниения введенного обьявления, при создании обьектов формы набора и набора форм, мы должны передать контсрукторам их
 #класса вторым позиционным параметром словарь со всеми полученными файлами(он хранится в атрибуте FILES обьекта запроса). Если мы не сделаем
 #этого, то отправленные пользователем илююстрации окажутся потерянными.
+
+#Для зарегистрированных пользователей
+#Пользователь умеет правку поста
+@login_required
+def profile_post_change(request, pk):
+
+	post = get_object_or_404(Post, pk=pk)
+	if request.method == 'POST':
+		form = PostForm(request.POST, request.FILES, instance=post)
+		if form.is_valid():
+			post = form.save()
+			formset = AIFormSet(request.POST, request.FILES, instance=post)
+			if formset.is_valid():
+				formset.save()
+				messages.add_message(request, messages.SUCCESS, 'Обьявление исправлено')
+				return redirect('main:profile')
+	else:
+		form = PostForm(instance=post)
+		formset = AIFormSet(instance=post)
+	context = {
+		'form' : form,
+		'formset' : formset
+	}
+	return render(request, 'main/profile_post_change.html', context)
+
+#Для зарегистрированных пользователей
+#Пользователь умеет удалить пост
+@login_required
+def profile_post_delete(request, pk):
+	post = get_object_or_404(Post, pk=pk)
+	if request.method == 'POST':
+		post.delete()
+		messages.add_message(request, messages.SUCCESS, 'Обьявление удалено')
+		return redirect('main:profile')
+	else:
+		context = {
+			'post': post
+		}
+		return render(request, 'main/profile_post_delete.html', context)
+
