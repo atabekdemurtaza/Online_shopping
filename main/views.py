@@ -27,6 +27,9 @@ from .models import SubRubric, Post
 from .forms import SearchForm
 from django.shortcuts import redirect
 from .forms import PostForm, AIFormSet
+from .models import Comment
+from .forms import UserCommentForm
+from .forms import GuestCommentForm
 
 
 
@@ -196,11 +199,41 @@ def by_rubric(request, pk):
 #Пост для общего пользования
 def detail(request, rubric_pk, pk):
 
-	post = get_object_or_404(Post, pk=pk)
+	#Старая версия
+	"""post = get_object_or_404(Post, pk=pk)
 	ais = post.additionalimage_set.all()
 	context = {
 		'post':post,
 		'ais' :ais,
+	}
+	return render(request, 'main/detail.html', context)"""
+
+	#Новая версия с комментариями
+	post = Post.objects.get(pk=pk) #В поле post заносим ключ вывод на странице обьявления
+	ais  = post.additionalimage_set.all()
+	comments = Comment.objects.filter(post=pk, is_active=True)
+	initial = {
+		'post': post.pk
+	}
+	if request.user.is_authenticated: #Если пользователь вошел в систему
+		initial['author'] = request.user.username #Заносим туда имя пользователя
+		form_class = UserCommentForm #Если выполнил то может оставлять коммент
+	else:
+		form_class = GuestCommentForm #Если не пользователь то оставляет как гость
+	form = form_class(initial=initial) #Обьект формы сохраним в переменной с именем form.Форма из этой переменной впоследствии будет выведена на странице сведений об обьявлении.
+	if request.method == 'POST':
+		c_form = form_class(request.POST) #Пользователь оставил коммент мы сохраняем его тут
+		if c_form.is_valid(): #Проверяем валидацию вторго форма
+			c_form.save()     #Если соответствует то сохраним
+			messages.add_message(request, messages.SUCCESS, 'Комментарий добавлен')
+		else:
+			form = c_form 
+			messages.add_message(request, messages.WARNING, 'Комментарий не добавлен')
+	context = {
+		'post': post,
+		'ais' : ais,
+		'comments': comments,
+		'form': form
 	}
 	return render(request, 'main/detail.html', context)
 

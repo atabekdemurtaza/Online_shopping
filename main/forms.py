@@ -7,6 +7,8 @@ from .apps import user_registered
 from .models import SuperRubric, SubRubric
 from django.forms import inlineformset_factory, widgets
 from .models import Post, AdditionalImage
+from captcha.fields import CaptchaField
+from .models import Comment
 
 class ChangeUserInfoForm(forms.ModelForm):
 
@@ -93,3 +95,28 @@ class PostForm(forms.ModelForm):
 		}
 
 AIFormSet = inlineformset_factory(Post, AdditionalImage, fields='__all__')
+
+class UserCommentForm(forms.ModelForm): #Для зарегистрированных пользователей
+
+	class Meta:
+
+		model = Comment 
+		exclude = ('is_active',)
+		widgets = {
+			'post': forms.HiddenInput
+		}
+
+class GuestCommentForm(forms.ModelForm): #Для гостей
+	
+	captcha = CaptchaField(label='Введите текст с картинки', error_messages={'invalid':'Неправильный текст'})
+
+	class Meta:
+
+		model = Comment 
+		exclude = ('is_active',)
+		widgets = {
+			'post': forms.HiddenInput
+		}
+#is_active поле это признак, будет ли комментарий выводится на странице
+#Уберем его из форм, поскольку оно требуется лишь админстрации сайта
+#Теперь обновляем detail() из views.py

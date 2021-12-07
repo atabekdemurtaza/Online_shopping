@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'easy_thumbnails',
     'ckeditor',
     'multiselectfield',
+    'captcha',
 
 ]
 

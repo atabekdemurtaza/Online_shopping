@@ -12,3 +12,4 @@ easy-thumbnails==2.8
 django-cleanup==5.2.0
 django-ckeditor==6.1.0
 django-multiselectfield==0.1.12
+django-simple-captcha==0.5.14

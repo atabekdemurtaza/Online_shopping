@@ -121,3 +121,19 @@ class AdditionalImage(models.Model):
 
 		verbose_name_plural = 'Дополнительные иллюстрации'
 		verbose_name = 'Дополнительная иллюстрация'
+
+#Создадим базу для комментарии
+class Comment(models.Model):
+
+	post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name='Обьявление')
+	author = models.CharField(max_length=30, verbose_name='Автор')
+	content = RichTextField(verbose_name='Содержание')
+	is_active = models.BooleanField(default=True, db_index=True, verbose_name='Выводить на экран?')
+	created_at = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Опубликован')
+
+	class Meta:
+
+		verbose_name_plural = 'Комментарии'
+		verbose_name = 'Комментарий'
+		ordering = ['created_at'] #Указываем так что бы новые комментарии полявились позже старых
+		
