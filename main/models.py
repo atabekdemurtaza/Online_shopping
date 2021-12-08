@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser
 from .utilities import get_timestamp_path
 from ckeditor.fields import RichTextField
 from multiselectfield import MultiSelectField
+from django.db.models.signals import post_save 
+from .utilities import send_new_comment_notification
 
 
 class User(AbstractUser):
@@ -137,3 +139,13 @@ class Comment(models.Model):
 		verbose_name = 'Комментарий'
 		ordering = ['created_at'] #Указываем так что бы новые комментарии полявились позже старых
 		
+#Создадим обработчик сигнала post_save который вызывает функцию
+#send_new_comment_notification() после добавления комментария
+
+def post_save_dispatcher(sender, **kwargs):
+
+	author = kwargs['instance'].post.author 
+	if kwargs['created'] and author.send_messages:
+		send_new_comment_notification(kwargs['instance'])
+
+post_save.connect(post_save_dispatcher, sender=Comment)

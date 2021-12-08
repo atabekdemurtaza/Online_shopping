@@ -5,9 +5,11 @@ from .utilities import send_activation_notification
 from .models import SuperRubric, SubRubric 
 from .forms import SubRubricForm
 from .models import AdditionalImage, Post
+from .models import Comment
+from .utilities import send_new_comment_notification
 
 #Отправляем письма для активации 
-def send_activation_notifications(modeladmin, request, queryset):
+def send_activation_notifications(modeladmin, request, queryset):  
 
 	for rec in queryset:
 		if not rec.is_activated:
@@ -80,7 +82,22 @@ class PostAdmin(admin.ModelAdmin):
 	fields = (('rubric', 'author'), 'title', 'content', 'price', 'contacts', 'image', 'is_active')
 	inlines = (AdditionalImageInline,)
 
+#Отправляем письма пользователю о том что коммент добавился
+def send_new_comment_notifications(modeladmin, request, queryset):
+
+	for rec in queryset:
+		if not rec.is_active:
+			send_activation_notification(rec)
+	modeladmin.message_user(request, 'Комменты отправлены')
+send_activation_notifications.short_description = 'Отправка комменты'
+
+class Comments(admin.ModelAdmin):
+
+	list_display = ('author', 'content', 'created_at')
+	search_fields = ('created_at',)
+
 admin.site.register(User, UserAdmin)
 admin.site.register(SuperRubric, SuperRubricAdmin)
 admin.site.register(SubRubric, SubRubricAdmin)
 admin.site.register(Post, PostAdmin)
+admin.site.register(Comment, Comments)

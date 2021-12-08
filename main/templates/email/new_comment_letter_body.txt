@@ -1,0 +1,4 @@
+Ваш комментарий добавлен!
+
+Если хотите посмотреть перейдите по этой ссылке 
+{{host}}{% url 'main:detail' rubric_pk=author.pk pk=comment.pk %} 
