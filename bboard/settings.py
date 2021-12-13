@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'ckeditor',
     'multiselectfield',
     'captcha',
+    'rest_framework',
+    'corsheaders',
 
 ]
 
