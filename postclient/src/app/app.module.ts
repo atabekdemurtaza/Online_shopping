@@ -4,6 +4,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { PostListComponent } from './post-list.component';
 import { PostDetailComponent } from './post-detail.component';
+import { PostService } from './post.service';
+
 
 @NgModule({
   declarations: [
@@ -14,7 +16,9 @@ import { PostDetailComponent } from './post-detail.component';
   imports: [
     BrowserModule
   ],
-  providers: [],
+  providers: [
+    PostService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
